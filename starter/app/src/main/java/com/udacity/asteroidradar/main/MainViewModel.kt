@@ -3,7 +3,16 @@ package com.udacity.asteroidradar.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.api.NasaApi
+import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.lang.Exception
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 class MainViewModel : ViewModel() {
 
@@ -20,11 +29,23 @@ class MainViewModel : ViewModel() {
     }
 
     private fun getAsteroids() {
-        // TODO with the Nasa API Service
-        _asteroids.value = arrayListOf(
-            Asteroid(2, "68347 (2001 KB67)", "2020-02-08", 19.0, 20.0, 21.0, 22.0, false),
-            Asteroid(3, "(2015 XK351)", "2020-02-08", 23.0, 24.0, 25.0, 26.0, true)
-        )
+        viewModelScope.launch {
+            try {
+                var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                var todaysDateString = LocalDate.now().format(dateFormatter)
+                var nasaResponse =  NasaApi.scalarRetrofitService.getAsteroids(
+                    startDate = todaysDateString,
+                    endDate = todaysDateString // TODO add filter to change this
+                )
+                var nasaJson = JSONObject(nasaResponse)
+                var listResult = parseAsteroidsJsonResult(nasaJson)
+                if (listResult.size > 0) {
+                    _asteroids.value = listResult
+                }
+            } catch (e: Exception) {
+                _asteroids.value = listOf()
+            }
+        }
     }
 
     fun displayAsteroidDetails(asteroid: Asteroid) {
