@@ -11,6 +11,10 @@ class MainViewModel : ViewModel() {
     val asteroids: LiveData<List<Asteroid>>
         get() = _asteroids
 
+    private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid>()
+    val navigateToSelectedAsteroid: LiveData<Asteroid>
+        get() = _navigateToSelectedAsteroid
+
     init {
         getAsteroids()
     }
@@ -21,5 +25,13 @@ class MainViewModel : ViewModel() {
             Asteroid(2, "68347 (2001 KB67)", "2020-02-08", 19.0, 20.0, 21.0, 22.0, false),
             Asteroid(3, "(2015 XK351)", "2020-02-08", 23.0, 24.0, 25.0, 26.0, true)
         )
+    }
+
+    fun displayAsteroidDetails(asteroid: Asteroid) {
+        _navigateToSelectedAsteroid.value = asteroid
+    }
+
+    fun displayAsteroidComplete() {
+        _navigateToSelectedAsteroid.value = null
     }
 }
