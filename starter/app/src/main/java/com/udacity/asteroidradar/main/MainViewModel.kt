@@ -33,7 +33,7 @@ class MainViewModel : ViewModel() {
             try {
                 var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 var todaysDateString = LocalDate.now().format(dateFormatter)
-                var nasaResponse =  NasaApi.scalarRetrofitService.getAsteroids(
+                var nasaResponse =  NasaApi.retrofitService.getAsteroids(
                     startDate = todaysDateString,
                     endDate = todaysDateString // TODO add filter to change this
                 )
