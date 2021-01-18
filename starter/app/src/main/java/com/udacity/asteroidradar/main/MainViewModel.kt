@@ -9,8 +9,6 @@ import com.udacity.asteroidradar.database.AsteroidRepository
 import com.udacity.asteroidradar.database.getDatabase
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
 enum class AsteroidFilter { TODAY, WEEK, SAVED }
@@ -29,18 +27,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val asteroidRepository = AsteroidRepository(database)
 
 
+    private val _filter = MutableLiveData(AsteroidFilter.WEEK)
+
     init {
-        getAsteroids(AsteroidFilter.TODAY)
+        getAsteroids()
         getPictureOfDay()
     }
 
-    val asteroids = asteroidRepository.asteroids
+    val asteroids = Transformations.switchMap(_filter) {
+        when (it) {
+            AsteroidFilter.TODAY -> asteroidRepository.todaysAsteroids
+            AsteroidFilter.WEEK -> asteroidRepository.weeksAsteroids
+            else -> asteroidRepository.asteroids
+        }
+    }
 
-    private fun getAsteroids(filter: AsteroidFilter) {
+
+    private fun getAsteroids() {
         viewModelScope.launch {
-            var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            var todaysDateString = LocalDate.now().format(dateFormatter)
-            asteroidRepository.refreshAsteroids(todaysDateString) // FIXME actually use filter to determine this
+            asteroidRepository.refreshAsteroids()
         }
     }
 
@@ -62,8 +67,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _navigateToSelectedAsteroid.value = null
     }
 
-    fun updateFilter(filter: AsteroidFilter) {
-        getAsteroids(filter)
+    fun updateFilter(newFilter: AsteroidFilter) {
+        _filter.value = newFilter
     }
 
     class Factory(val app: Application) : ViewModelProvider.Factory {

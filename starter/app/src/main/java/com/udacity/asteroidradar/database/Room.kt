@@ -7,9 +7,26 @@ import androidx.room.*
 @Dao
 interface AsteroidDao {
 
-    // TODO set the upper bound
-    @Query("select * from databaseAsteroid where closeApproachDate >= date('now')")
+    @Query("""
+        SELECT * FROM databaseAsteroid
+        WHERE closeApproachDate >= date('now')
+        ORDER BY closeApproachDate ASC
+    """)
     fun getAsteroids(): LiveData<List<DatabaseAsteroid>>
+
+    @Query("""
+        SELECT * FROM databaseAsteroid
+        WHERE closeApproachDate = date('now')
+        ORDER BY closeApproachDate ASC
+    """)
+    fun getTodaysAsteroids(): LiveData<List<DatabaseAsteroid>>
+
+    @Query("""
+        SELECT * FROM databaseasteroid
+        WHERE closeApproachDate BETWEEN date('now') AND date('now', '+7 days')
+        ORDER BY closeApproachDate ASC
+    """) // FIXME +6 instead?
+    fun getWeeksAsteroids(): LiveData<List<DatabaseAsteroid>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)  // FIXME this right?
     fun insertAll(vararg asteroid: DatabaseAsteroid)

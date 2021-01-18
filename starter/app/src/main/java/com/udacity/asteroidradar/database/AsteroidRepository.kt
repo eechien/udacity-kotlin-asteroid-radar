@@ -11,17 +11,30 @@ import java.time.format.DateTimeFormatter
 
 class AsteroidRepository(private val database: AsteroidsDatabase) {
 
-    val asteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAsteroids()) {
-        it.asDomainModel()
-    }
+    val asteroids: LiveData<List<Asteroid>> =
+        Transformations.map(database.asteroidDao.getAsteroids()) {
+            it.asDomainModel()
+        }
 
-    suspend fun refreshAsteroids(endDate: String) {
+    val todaysAsteroids: LiveData<List<Asteroid>> =
+        Transformations.map(database.asteroidDao.getTodaysAsteroids()) {
+            it.asDomainModel()
+        }
+
+    val weeksAsteroids: LiveData<List<Asteroid>> =
+        Transformations.map(database.asteroidDao.getWeeksAsteroids()) {
+            it.asDomainModel()
+        }
+
+    suspend fun refreshAsteroids() {
         withContext(Dispatchers.IO) {
             var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            var todaysDateString = LocalDate.now().format(dateFormatter)
+            var today = LocalDate.now()
+            var todaysDateString = today.format(dateFormatter)
+            var weekFromTodayString = today.plusDays(7).format(dateFormatter)
             var nasaResponse =  NasaApi.retrofitService.getAsteroids(
                 startDate = todaysDateString,
-                endDate = endDate
+                endDate = weekFromTodayString
             )
             var asteroidList = stringToNetworkAsteroids(nasaResponse)
             database.asteroidDao.insertAll(*asteroidList.asDatabaseModel())
