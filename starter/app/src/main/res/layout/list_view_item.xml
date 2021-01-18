@@ -7,7 +7,7 @@
     <data>
         <variable
             name="asteroid"
-            type="com.udacity.asteroidradar.Asteroid" />
+            type="com.udacity.asteroidradar.domain.Asteroid" />
     </data>
 
     <LinearLayout

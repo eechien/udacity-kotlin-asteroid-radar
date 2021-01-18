@@ -2,7 +2,7 @@ package com.udacity.asteroidradar.database
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.network.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

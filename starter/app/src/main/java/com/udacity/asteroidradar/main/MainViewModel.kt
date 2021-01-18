@@ -3,8 +3,8 @@ package com.udacity.asteroidradar.main
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.PictureOfDay
+import com.udacity.asteroidradar.domain.Asteroid
+import com.udacity.asteroidradar.domain.PictureOfDay
 import com.udacity.asteroidradar.network.NasaApi
 import com.udacity.asteroidradar.database.AsteroidRepository
 import com.udacity.asteroidradar.database.getDatabase
