@@ -3,7 +3,6 @@ package com.udacity.asteroidradar.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.udacity.asteroidradar.domain.Asteroid
-import java.text.SimpleDateFormat
 
 @Entity
 data class DatabaseAsteroid constructor(
@@ -20,7 +19,6 @@ data class DatabaseAsteroid constructor(
 
 fun List<DatabaseAsteroid>.asDomainModel(): List<Asteroid> {
     return map {
-        val sdf = SimpleDateFormat("yyyy-MM-dd") // TODO to date?
         Asteroid(
             id = it.id,
             codename = it.codename,
