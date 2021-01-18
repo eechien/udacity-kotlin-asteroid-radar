@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
@@ -8,7 +9,10 @@ import com.udacity.asteroidradar.api.NasaApi
 import com.udacity.asteroidradar.database.AsteroidRepository
 import com.udacity.asteroidradar.database.getDatabase
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.lang.Exception
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 enum class AsteroidFilter { TODAY, WEEK, SAVED }
@@ -42,10 +46,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-
     private fun getAsteroids() {
         viewModelScope.launch {
-            asteroidRepository.refreshAsteroids()
+            var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            var today = LocalDate.now()
+            var todaysDateString = today.format(dateFormatter)
+            var weekFromTodayString = today.plusDays(7).format(dateFormatter)
+            try {
+                asteroidRepository.refreshAsteroids(todaysDateString, weekFromTodayString)
+            } catch (e: HttpException) {
+                Log.d("MainViewModel", "Unable to refresh Asteroids from Nasa API, check internet connection", e)
+            }
         }
     }
 
