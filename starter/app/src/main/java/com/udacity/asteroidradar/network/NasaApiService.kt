@@ -2,8 +2,8 @@ package com.udacity.asteroidradar.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.udacity.asteroidradar.Constants.API_KEY
-import com.udacity.asteroidradar.Constants.BASE_URL
+import com.udacity.asteroidradar.util.Constants.API_KEY
+import com.udacity.asteroidradar.util.Constants.BASE_URL
 import com.udacity.asteroidradar.domain.PictureOfDay
 import okhttp3.ResponseBody
 import retrofit2.Converter
