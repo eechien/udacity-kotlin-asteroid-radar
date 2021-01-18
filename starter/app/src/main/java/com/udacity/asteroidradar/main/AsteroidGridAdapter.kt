@@ -9,14 +9,8 @@ import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.databinding.ListViewItemBinding
 
 
-class AsteroidGridAdapter(private val onClickListener: OnClickListener): ListAdapter<Asteroid, AsteroidGridAdapter.AsteroidViewHolder>(DiffCallback) {
-    class AsteroidViewHolder(private val binding: ListViewItemBinding):
-            RecyclerView.ViewHolder(binding.root) {
-        fun bind(asteroid: Asteroid) {
-            binding.asteroid = asteroid
-            binding.executePendingBindings()
-        }
-    }
+class AsteroidGridAdapter(private val onClickListener: OnClickListener):
+        ListAdapter<Asteroid, AsteroidViewHolder>(DiffCallback) {
 
     companion object DiffCallback: DiffUtil.ItemCallback<Asteroid>() {
         override fun areItemsTheSame(oldItem: Asteroid, newItem: Asteroid): Boolean {
@@ -28,11 +22,11 @@ class AsteroidGridAdapter(private val onClickListener: OnClickListener): ListAda
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AsteroidGridAdapter.AsteroidViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AsteroidViewHolder {
         return AsteroidViewHolder(ListViewItemBinding.inflate(LayoutInflater.from(parent.context)))
     }
 
-    override fun onBindViewHolder(holder: AsteroidGridAdapter.AsteroidViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AsteroidViewHolder, position: Int) {
         val asteroid = getItem(position)
         holder.itemView.setOnClickListener {
             onClickListener.onClick(asteroid)
@@ -42,5 +36,13 @@ class AsteroidGridAdapter(private val onClickListener: OnClickListener): ListAda
 
     class OnClickListener(val clickListener: (asteroid: Asteroid) -> Unit) {
         fun onClick(asteroid: Asteroid) = clickListener(asteroid)
+    }
+}
+
+class AsteroidViewHolder(val binding: ListViewItemBinding):
+        RecyclerView.ViewHolder(binding.root) {
+    fun bind(asteroid: Asteroid) {
+        binding.asteroid = asteroid
+        binding.executePendingBindings()
     }
 }

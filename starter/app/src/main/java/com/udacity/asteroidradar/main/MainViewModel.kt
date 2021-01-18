@@ -1,24 +1,21 @@
 package com.udacity.asteroidradar.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.NasaApi
-import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
+import com.udacity.asteroidradar.database.AsteroidRepository
+import com.udacity.asteroidradar.database.getDatabase
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import java.lang.Exception
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class MainViewModel : ViewModel() {
 
-    private val _asteroids = MutableLiveData<List<Asteroid>>()
-    val asteroids: LiveData<List<Asteroid>>
-        get() = _asteroids
+enum class AsteroidFilter { TODAY, WEEK, SAVED }
+
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid>()
     val navigateToSelectedAsteroid: LiveData<Asteroid>
@@ -28,28 +25,22 @@ class MainViewModel : ViewModel() {
     val pictureOfDay: LiveData<PictureOfDay>
         get() = _pictureOfDay
 
+    private val database = getDatabase(application)
+    private val asteroidRepository = AsteroidRepository(database)
+
+
     init {
-        getAsteroids()
+        getAsteroids(AsteroidFilter.TODAY)
         getPictureOfDay()
     }
 
-    private fun getAsteroids() {
+    val asteroids = asteroidRepository.asteroids
+
+    private fun getAsteroids(filter: AsteroidFilter) {
         viewModelScope.launch {
-            try {
-                var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                var todaysDateString = LocalDate.now().format(dateFormatter)
-                var nasaResponse =  NasaApi.retrofitService.getAsteroids(
-                    startDate = todaysDateString,
-                    endDate = todaysDateString // TODO add filter to change this
-                )
-                var nasaJson = JSONObject(nasaResponse)
-                var listResult = parseAsteroidsJsonResult(nasaJson)
-                if (listResult.size > 0) {
-                    _asteroids.value = listResult
-                }
-            } catch (e: Exception) {
-                _asteroids.value = listOf()
-            }
+            var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            var todaysDateString = LocalDate.now().format(dateFormatter)
+            asteroidRepository.refreshAsteroids(todaysDateString) // FIXME actually use filter to determine this
         }
     }
 
@@ -69,5 +60,19 @@ class MainViewModel : ViewModel() {
 
     fun displayAsteroidComplete() {
         _navigateToSelectedAsteroid.value = null
+    }
+
+    fun updateFilter(filter: AsteroidFilter) {
+        getAsteroids(filter)
+    }
+
+    class Factory(val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return MainViewModel(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct viewmodel")
+        }
     }
 }
