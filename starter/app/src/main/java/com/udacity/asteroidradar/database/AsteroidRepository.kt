@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.database
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.Asteroid
@@ -32,12 +33,17 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
             var today = LocalDate.now()
             var todaysDateString = today.format(dateFormatter)
             var weekFromTodayString = today.plusDays(7).format(dateFormatter)
-            var nasaResponse =  NasaApi.retrofitService.getAsteroids(
-                startDate = todaysDateString,
-                endDate = weekFromTodayString
-            )
-            var asteroidList = stringToNetworkAsteroids(nasaResponse)
-            database.asteroidDao.insertAll(*asteroidList.asDatabaseModel())
+            try {
+                var nasaResponse = NasaApi.retrofitService.getAsteroids(
+                    startDate = todaysDateString,
+                    endDate = weekFromTodayString
+                )
+                var asteroidList = stringToNetworkAsteroids(nasaResponse)
+                database.asteroidDao.insertAll(*asteroidList.asDatabaseModel())
+            } catch (e: Exception) {
+                Log.e("AsteroidRepository", "Issue querying Nasa API for asteroids.", e)
+            }
+
         }
     }
 }
