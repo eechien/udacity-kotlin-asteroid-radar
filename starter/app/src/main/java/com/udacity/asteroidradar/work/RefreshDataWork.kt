@@ -21,10 +21,7 @@ class RefreshDataWorker(appContext: Context, params: WorkerParameters):
         val repository = AsteroidRepository(database)
 
         return try {
-            var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            var today = LocalDate.now()
-            var todaysDateString = today.format(dateFormatter)
-            repository.refreshAsteroids(todaysDateString, todaysDateString)
+            repository.refreshAsteroids()
             Result.success()
         } catch (e: HttpException) {
             Result.retry()

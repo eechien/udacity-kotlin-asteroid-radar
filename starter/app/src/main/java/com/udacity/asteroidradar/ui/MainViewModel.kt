@@ -48,12 +48,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun getAsteroids() {
         viewModelScope.launch {
-            var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            var today = LocalDate.now()
-            var todaysDateString = today.format(dateFormatter)
-            var weekFromTodayString = today.plusDays(7).format(dateFormatter)
             try {
-                asteroidRepository.refreshAsteroids(todaysDateString, weekFromTodayString)
+                asteroidRepository.refreshAsteroids()
             } catch (e: HttpException) {
                 Log.d("MainViewModel", "Unable to refresh Asteroids from Nasa API, check internet connection", e)
             }

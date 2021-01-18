@@ -6,6 +6,8 @@ import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.network.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class AsteroidRepository(private val database: AsteroidsDatabase) {
 
@@ -24,11 +26,15 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
             it.asDomainModel()
         }
 
-    suspend fun refreshAsteroids(startDate: String, endDate: String) {
+    suspend fun refreshAsteroids() {
         withContext(Dispatchers.IO) {
+            var dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            var today = LocalDate.now()
+            var todaysDateString = today.format(dateFormatter)
+            var weekFromTodayString = today.plusDays(7).format(dateFormatter)
             var nasaResponse = NasaApi.retrofitService.getAsteroids(
-                startDate = startDate,
-                endDate = endDate
+                startDate = todaysDateString,
+                endDate = weekFromTodayString
             )
             var asteroidList = stringToNetworkAsteroids(nasaResponse)
             database.asteroidDao.insertAll(*asteroidList.asDatabaseModel())
