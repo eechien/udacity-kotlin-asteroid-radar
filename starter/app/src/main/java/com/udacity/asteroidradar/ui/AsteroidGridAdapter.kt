@@ -1,4 +1,4 @@
-package com.udacity.asteroidradar.main
+package com.udacity.asteroidradar.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
