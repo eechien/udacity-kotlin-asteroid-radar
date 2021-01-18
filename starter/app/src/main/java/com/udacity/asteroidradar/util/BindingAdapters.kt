@@ -55,3 +55,15 @@ fun ImageView.asteroidListStatusImage(item: Asteroid) {
         })
     }
 }
+
+@BindingAdapter("asteroidDetailImageDescription")
+fun ImageView.asteroidDetailImageDescription(item: Asteroid) {
+    item?.let {
+        contentDescription = getResources().getString(
+            when(item.isPotentiallyHazardous) {
+                true -> R.string.potentially_hazardous_asteroid_image
+                false -> R.string.not_hazardous_asteroid_image
+            }
+        )
+    }
+}

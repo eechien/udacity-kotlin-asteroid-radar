@@ -46,7 +46,8 @@
             android:layout_height="wrap_content"
             tools:srcCompat="@drawable/ic_status_potentially_hazardous"
             android:padding="@dimen/spacingNormal"
-            app:asteroidListStatusImage="@{asteroid}"/>
+            app:asteroidListStatusImage="@{asteroid}"
+            app:asteroidDetailImageDescription="@{asteroid}"/>
     </LinearLayout>
 
 </layout>
