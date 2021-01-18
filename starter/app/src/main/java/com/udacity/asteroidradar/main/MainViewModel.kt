@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
-import com.udacity.asteroidradar.api.NasaApi
+import com.udacity.asteroidradar.network.NasaApi
 import com.udacity.asteroidradar.database.AsteroidRepository
 import com.udacity.asteroidradar.database.getDatabase
 import kotlinx.coroutines.launch
