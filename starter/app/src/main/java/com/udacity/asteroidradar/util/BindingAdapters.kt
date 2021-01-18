@@ -8,12 +8,13 @@ import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.domain.Asteroid
 
 
-@BindingAdapter("asteroidStatusImage")
-fun bindDetailsStatusImage(imageView: ImageView, isHazardous: Boolean) {
-    if (isHazardous) {
-        imageView.setImageResource(R.drawable.asteroid_hazardous)
-    } else {
-        imageView.setImageResource(R.drawable.asteroid_safe)
+@BindingAdapter("asteroidDetailsStatusImage")
+fun ImageView.asteroidDetailsStatusImage(isHazardous: Boolean) {
+    isHazardous?.let {
+        setImageResource(when (it) {
+            true -> R.drawable.asteroid_hazardous
+            false -> R.drawable.asteroid_safe
+        })
     }
 }
 
