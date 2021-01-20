@@ -40,4 +40,10 @@ class AsteroidRepository(private val database: AsteroidsDatabase) {
             database.asteroidDao.insertAll(*asteroidList.asDatabaseModel())
         }
     }
+
+    suspend fun deletePastAsteroids() {
+        withContext(Dispatchers.IO) {
+            database.asteroidDao.deletePastAsteroids()
+        }
+    }
 }
