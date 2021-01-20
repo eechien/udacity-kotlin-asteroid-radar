@@ -144,6 +144,8 @@ https://api.nasa.gov/
 
 You will need an API Key which is provided for you in that same link, just fill the fields in the form and click Signup.
 
+Then add the provided API key to your local.properties file with key "nasaApiKey".
+
 ## License
 
 
