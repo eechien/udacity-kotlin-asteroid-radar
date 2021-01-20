@@ -22,13 +22,13 @@ interface AsteroidDao {
     fun getTodaysAsteroids(): LiveData<List<DatabaseAsteroid>>
 
     @Query("""
-        SELECT * FROM databaseasteroid
+        SELECT * FROM databaseAsteroid
         WHERE closeApproachDate BETWEEN date('now') AND date('now', '+7 days')
         ORDER BY closeApproachDate ASC
-    """) // FIXME +6 instead?
+    """)
     fun getWeeksAsteroids(): LiveData<List<DatabaseAsteroid>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)  // FIXME this right?
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg asteroid: DatabaseAsteroid)
 
     @Query("DELETE FROM databaseAsteroid WHERE closeApproachDate < date('now')")
