@@ -26,18 +26,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{asteroid.codename}"
+                android:layout_marginTop="@dimen/spacingNormal"
                 android:layout_marginStart="@dimen/spacingNormal"
-                tools:text="68347 (2001 KB67)"
-                style="@style/CustomHeadline5"/>
+                tools:text="68347 (2001 KB67)" />
 
             <TextView
                 android:id="@+id/closeApproachDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacingSmall"
                 android:text="@{asteroid.closeApproachDate}"
                 tools:text="2020-02-08"
-                android:layout_marginStart="@dimen/spacingNormal"
-                style="@style/CustomSubtitle1"/>
+                android:layout_marginStart="@dimen/spacingNormal" />
         </LinearLayout>
 
         <ImageView
