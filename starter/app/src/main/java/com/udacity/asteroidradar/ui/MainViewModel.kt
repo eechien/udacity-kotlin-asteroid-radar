@@ -50,7 +50,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 asteroidRepository.refreshAsteroids()
-            } catch (e: HttpException) {
+            } catch (e: Exception) {
                 Log.d("MainViewModel", "Unable to refresh Asteroids from Nasa API, check internet connection", e)
             }
         }
